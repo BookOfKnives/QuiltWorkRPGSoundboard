@@ -1,0 +1,18 @@
+{
+  "name": "002-hop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Soundboard"
+  ],
+  "author": "HVMW",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^31.3.1"
+  }
+}

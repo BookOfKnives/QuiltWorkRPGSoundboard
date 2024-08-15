@@ -1,0 +1,67 @@
+html, body, div {
+    background-color: #242;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+
+#soundboard-div {
+    height: 100vh;
+    width: 100vw;  
+}
+
+#soundboard-div > p {
+    background-color: #898;
+}
+
+.sound-box-div {
+    position: absolute;
+    width: 120px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #009688;
+    color: #fff;
+    border-radius: 5px;
+    user-select: none;
+  }
+
+  .sound-controlpanel-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #009688;
+  }
+
+  .dragBox-div {
+  
+    width: 10px;
+    height: 10px;
+    border: 2px solid blue;
+    cursor: move;
+  }
+  
+  .deleteBox-div {
+    margin: 0;
+    width: 10px;
+    height: 10px;
+    border: 2px solid red;
+  }
+  .topRightButtonsBox-div {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  .volume-slider-input {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      appearance: slider-vertical;
+      width: 5vw;
+      height: 10vh;
+      vertical-align: bottom;
+  }
