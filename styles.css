@@ -5,12 +5,12 @@ html, body, div {
     border: 0px;
 }
 
-#soundboard-div {
+#soundboard-container-div {
     height: 100vh;
     width: 100vw;  
 }
 
-#soundboard-div > p {
+.soundboard-div > p {
     background-color: #898;
 }
 
@@ -61,7 +61,30 @@ html, body, div {
       writing-mode: vertical-lr;
       direction: rtl;
       appearance: slider-vertical;
-      width: 5vw;
-      height: 10vh;
+      width: 5px;
+      height: 40px;
       vertical-align: bottom;
+  }
+
+  #soundboard-controlpanel-div {
+    display: flex;
+    background-color: #222;
+    border: 2px solid #585;
+    padding: 2px;
+    width: 250px;
+  }
+
+  #soundboard-controlpanel-div > #sc-stopbutton-div {
+    border: 2px solid darkred;
+    background-color: red;
+    width: 25px;
+    height: 25px;
+  }
+
+  #soundboard-controlpanel-div > #sc-stopbutton-div:hover {
+    background-color: #ff6666;
+  }
+
+  #soundboard-controlpanel-div > #sc-stopbutton-div:active {
+    background-color: #ffbebe;
   }

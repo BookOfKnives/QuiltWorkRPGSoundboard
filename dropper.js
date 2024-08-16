@@ -1,9 +1,16 @@
 console.log("started!");
-const SBC = document.getElementById("soundboard-div");
 
-function soundBoardStarter() {
-    
-    console.log("dragger started too")
+const CP = document.getElementById("soundboard-controlpanel-div");
+function controlPanel() {
+    const CP_STOP = document.getElementById("sc-stopbutton-div");
+    CP_STOP.addEventListener("click", () => {
+        Howler.stop();
+    })
+}
+controlPanel();
+
+const SBC = document.getElementById("soundboard-container-div");
+function dragDropController() {
     SBC.ondragover = () => { return false; };
     SBC.ondragleave = () => { return false; };
     SBC.ondragend = () => { return false; };
@@ -17,27 +24,27 @@ function soundBoardStarter() {
                 const position = { left: e.clientX, top: (e.clientY + (index * 100)) }
                 index++;
                 createSoundBox(fileName, filePath, position)
-
             }
         }
         return false;
     }
 }
-soundBoardStarter();
+dragDropController();
 
 function createSoundBox(name, filePath, position) {
-    const sound = new Howl({ src: [filePath] })
-    const soundBox = document.createElement("div")
-    soundBox.className = "sound-box-div"
-    soundBox.textContent = name
+    const sound = new Howl({ src: [filePath], preload: true });
+    sound.play();
+    sound.stop();
+    const soundBox = document.createElement("div");
+    soundBox.className = "sound-box-div";
+    soundBox.textContent = name;
     soundBox.style.left = `${position.left}px`
     soundBox.style.top = `${position.top}px`
 
     const soundControlPanel = document.createElement("div");
     soundControlPanel.className = "sound-controlpanel-div"
 
-    soundBox.appendChild(soundControlPanel)
-    
+    soundBox.appendChild(soundControlPanel);
 
     const playButton = document.createElement("button")
     playButton.textContent = "Play"
@@ -62,7 +69,8 @@ function createSoundBox(name, filePath, position) {
     });
 
     const durationIndicator = document.createElement("div");
-    durationIndicator.textContent = "00:00 / 00:00";
+    durationIndicator.textContent = `00:00 / ${formatTime( sound.duration() )}`;
+
     let animationFrameId;
     sound.on('play', () => {
         updateDuration();
@@ -74,14 +82,13 @@ function createSoundBox(name, filePath, position) {
 
     sound.on('stop', () => {
         cancelAnimationFrame(animationFrameId);
-        durationIndicator.textContent = "00:00 / 00:00";
+        durationIndicator.textContent = `00:00 / ${formatTime( sound.duration() )}`;
     });
     
     function updateDuration() {
         const seek = sound.seek() || 0;
         const total = sound.duration() || 0;
         durationIndicator.textContent = `${formatTime(seek)} / ${formatTime(total)}`;
-        console.log("time:", durationIndicator.textContent)
         if (sound.playing()) {
             animationFrameId = requestAnimationFrame(updateDuration);
         }
@@ -92,7 +99,6 @@ function createSoundBox(name, filePath, position) {
         const secs = Math.floor(seconds % 60);
         return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     }
-
 
     const topRightButtonsBox = document.createElement("div");
     topRightButtonsBox.className = "topRightButtonsBox-div"
@@ -118,12 +124,17 @@ function createSoundBox(name, filePath, position) {
     const deleteBox = document.createElement("div");
     deleteBox.className = "deleteBox-div";
     deleteBox.addEventListener("click", () => {
-        console.log("yopu cliked dlete!")
-        sound.stop()
+        sound.stop();
         sound.unload();
-        SBC.removeChild(soundBox) 
+        SBC.removeChild(soundBox); 
+    });
+    const groupMakerBox = document.createElement("div");
+    groupMakerBox.className = "groupMakerBox-div";
+    groupMakerBox.addEventListener("click", () => {
+        console.log("you clicked grouper!")
     })
-    topRightButtonsBox.appendChild(deleteBox)
+
+    topRightButtonsBox.appendChild(deleteBox);
 
     soundControlPanel.appendChild(volumeSlider);
     soundControlPanel.appendChild(playButton);
