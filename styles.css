@@ -35,18 +35,34 @@ html, body, div {
   }
 
   .dragBox-div {
-  
     width: 10px;
     height: 10px;
     border: 2px solid blue;
     cursor: move;
   }
-  
+  .dragBox-div:hover {
+    border: 2px solid rgb(160, 160, 255);
+    background-color: blue;
+  }
+  .dragbox-div:active {
+    border: 2px solid rgb(53, 53, 145);
+    background-color: rgb(224, 224, 255);
+  }
   .deleteBox-div {
     margin: 0;
     width: 10px;
     height: 10px;
     border: 2px solid red;
+  }
+  .deleteBox-div:hover {
+    border: 2px solid #ff7474;
+    background-color: red;
+  }
+  .groupBox-div {
+    margin: 0;
+    width: 10px;
+    height: 10px;
+    border: 2px solid rgb(0, 255, 106);
   }
   .topRightButtonsBox-div {
     display: flex;
@@ -80,11 +96,36 @@ html, body, div {
     width: 25px;
     height: 25px;
   }
-
   #soundboard-controlpanel-div > #sc-stopbutton-div:hover {
     background-color: #ff6666;
   }
-
   #soundboard-controlpanel-div > #sc-stopbutton-div:active {
     background-color: #ffbebe;
   }
+
+  #soundboard-controlpanel-div > #sc-playallbutton-div {
+   border: 2px solid green;
+   width: 25px;
+   height: 25px; 
+  }
+  #soundboard-controlpanel-div > #sc-playallbutton-div:hover {
+    background-color: #44ff55;
+
+  }
+  #soundboard-controlpanel-div > #sc-playallbutton-div:active {
+    background-color: #bbffc1;
+  }
+
+  #soundboard-controlpanel-div > #sc-testbutton-div {
+   border: 2px solid rgb(17, 0, 128);
+   width: 25px;
+   height: 25px; 
+  }
+  #soundboard-controlpanel-div > #sc-testbutton-div:hover {
+    background-color: #44ff55;
+
+  }
+  #soundboard-controlpanel-div > #sc-testbutton-div:active {
+    background-color: #bbffc1;
+  }
+
