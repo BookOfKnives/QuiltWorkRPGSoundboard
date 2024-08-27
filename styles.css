@@ -129,3 +129,6 @@ html, body, div {
     background-color: #bbffc1;
   }
 
+  .selected {
+    border: 1px dotted yellow;
+  }

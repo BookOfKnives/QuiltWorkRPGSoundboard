@@ -1,7 +1,5 @@
-const dataObject = {
-    arrayOfSelectedBits: [],
-    arrPlayFunctions: [],
-}
+
+const playAllEvent = new CustomEvent("playAll");
 
 // const CP = document.getElementById("soundboard-controlpanel-div");
 function controlPanel() {
@@ -11,9 +9,15 @@ function controlPanel() {
     })
     const CP_PLAYALL = document.getElementById("sc-playallbutton-div");
     CP_PLAYALL.addEventListener("click", () => {
-        console.log(dataObject)
-        dataObject.arrPlayFunctions[0]()
-        console.log("you hit playall!")
+        console.log("you hit playall!");
+        console.log("bits:", selectedBits);
+        // console.log("class:", document.getElementsByClassName("selected"));
+        // document.dispatchEvent(playAllEvent);
+        // console.log(crypto.randomBytes(22).toString("hex"));
+        // console.log(obj)
+        
+
+        // dataObject.bits
     })
         const CP_TEST = document.getElementById("sc-testbutton-div");
     CP_TEST.addEventListener("click", () => {
@@ -22,6 +26,10 @@ function controlPanel() {
 }
 controlPanel();
 
+function makeLongRandomNumber() {
+    let array = crypto.getRandomValues(new Uint32Array(2));
+    return array[0] + "" + array[1];
+}
 
 
 const SBC = document.getElementById("soundboard-container-div");
@@ -38,7 +46,7 @@ function dragDropController() {
                 const filePath = f.path
                 const position = { left: e.clientX, top: (e.clientY + (index * 100)) }
                 index++;
-                createSoundBox(fileName, filePath, position)
+                newSoundFactory(fileName, filePath, position)
             }
         }
         return false;
@@ -46,25 +54,25 @@ function dragDropController() {
 }
 dragDropController();
 
-const selectedBits = [];
-const allBits = [];
-
-function createSoundBox(name, filePath, position) {
-
-    function exposeId() {
-        console.log("id exposed", soundId);
-        return soundId;
-    } 
-
+const obj = {};
+const selectedBits = {};
+function newSoundFactory(fileName, filePath, position) {  
+    let name = makeLongRandomNumber();
+    obj[name] = new Howl({  //changed from const sound = new howl
+        src: [filePath], 
+        preload: true,
+        // onload: () => {
+        //     obj[name].play(); //sound.play()
+        // }
+        });
     
-
-    const sound = new Howl({ src: [filePath], preload: true });
-    let soundId = sound.play();
-    dataObject.arrPlayFunctions.push(sound);
-    sound.stop();
+    // let soundId = sound.play();
+    // let soundId = obj[name].play();
+    // dataObject.arrPlayFunctions.push(sound);
+    obj[name].stop(); //sound.play()
     const soundBox = document.createElement("div");
     soundBox.className = "sound-box-div";
-    soundBox.textContent = name;
+    soundBox.textContent = fileName;
     soundBox.style.left = `${position.left}px`;
     soundBox.style.top = `${position.top}px`;
 
@@ -76,21 +84,32 @@ function createSoundBox(name, filePath, position) {
     const playButton = document.createElement("button")
     playButton.textContent = "Play";
     playButton.addEventListener("click", () => {
-        sound.play();
+        // sound.play();
+        obj[name].play()
     });
+    //maybe i can make a costum event listener
+    playButton.addEventListener("playAll", () => {
+        console.log("sound hitting playall event!");
+        // sound.play();
+
+    }, false,)
+
     const stopButton = document.createElement("button")
     stopButton.textContent = "Stop"
     stopButton.addEventListener("click", () => {
-        sound.stop();
+        // sound.stop();
+        obj[name].stop()
     })
     const repeatButton = document.createElement("button");
 
     repeatButton.innerHTML = `<img src="./icons/repeat_small.png"></img>`;
     repeatButton.style.backgroundColor = "";
     repeatButton.addEventListener("click", () => { 
-        sound.loop(!sound.loop());
+        // sound.loop(!sound.loop());
+        obj[name].loop(!obj[name].loop());
         // console.log("sound is:", sound.loop())
-        if (sound.loop()) repeatButton.style.backgroundColor = "green";
+        // if (sound.loop()) repeatButton.style.backgroundColor = "green";
+        if (obj[name].loop()) repeatButton.style.backgroundColor = "green";
         else repeatButton.style.backgroundColor = "";
     });
 
@@ -100,26 +119,34 @@ function createSoundBox(name, filePath, position) {
     volumeSlider.min = 0;
     volumeSlider.max = 1;
     volumeSlider.step = 0.01;
-    volumeSlider.value = sound.volume();
+    // volumeSlider.value = sound.volume();
+    volumeSlider.value = obj[name].volume();
     volumeSlider.addEventListener("input", () => {
-        sound.volume(volumeSlider.value);
+        // sound.volume(volumeSlider.value);
+        obj[name].volume(volumeSlider.value);
     });
 
     const durationIndicator = document.createElement("div");
-    durationIndicator.textContent = `00:00 ${formatTime( sound.duration() )}`;
+    durationIndicator.textContent = `00:00 ${formatTime( obj[name].duration() )}`;
 
     let animationFrameId;
-    sound.on('play', () => {    updateDuration();    });
-    sound.on('pause', () => {        cancelAnimationFrame(animationFrameId);    });
-    sound.on('stop', () => {        cancelAnimationFrame(animationFrameId);
-        durationIndicator.textContent = `00:00 ${formatTime( sound.duration() )}`;
+    // sound.on('play', () => {    updateDuration();    });
+    // sound.on('pause', () => {        cancelAnimationFrame(animationFrameId);    });
+    // sound.on('stop', () => {        cancelAnimationFrame(animationFrameId);
+    obj[name].on('play', () => {    updateDuration();    });
+    obj[name].on('pause', () => {        cancelAnimationFrame(animationFrameId);    });
+    obj[name].on('stop', () => {        cancelAnimationFrame(animationFrameId);
+        durationIndicator.textContent = `00:00 ${formatTime( obj[name].duration() )}`;
     });
     
     function updateDuration() {
-        const seek = sound.seek() || 0;
-        const total = sound.duration() || 0;
+        // const seek = sound.seek() || 0;
+        // const total = sound.duration() || 0;
+        const seek = obj[name].seek() || 0;
+        const total = obj[name].duration() || 0;
         durationIndicator.textContent = `${formatTime(seek)} ${formatTime(total)}`;
-        if (sound.playing()) { animationFrameId = requestAnimationFrame(updateDuration);  }
+        // if (sound.playing()) { animationFrameId = requestAnimationFrame(updateDuration);  }
+        if (obj[name].playing()) { animationFrameId = requestAnimationFrame(updateDuration);  }
     }
 
     function formatTime(seconds) {
@@ -149,14 +176,22 @@ function createSoundBox(name, filePath, position) {
         //  saveSound(name, filePath, newPosition);
        });
 
-    //groupbox array place 1934
     const groupBox = document.createElement("div");
     groupBox.className = "groupBox-div";
     groupBox.addEventListener("click", () => {
-        console.log("you clicked grouper!");
-        console.log("this is id of box:", soundId);
-        dataObject.arrayOfSelectedBits.push(soundId);
-        console.log("array:", dataObject.arrayOfSelectedBits);
+        if (!soundBox.classList.contains("selected")) {
+            soundBox.classList.add("selected");
+            selectedBits.bits = { name, ...selectedBits };
+            return;
+        } else if (soundBox.classList.contains("selected")) {
+            soundBox.classList.remove("selected");
+            delete selectedBits.bits.name;
+            return
+        }
+        // console.log("you clicked grouper!");
+        // console.log("this is id of box:", soundId);
+        // dataObject.arrayOfSelectedBits.push(soundId);
+        // console.log("array:", dataObject.arrayOfSelectedBits);
         //add to grouper thing
         //mark as grouped
         //allow for selection
@@ -168,8 +203,10 @@ function createSoundBox(name, filePath, position) {
     const deleteBox = document.createElement("div");
     deleteBox.className = "deleteBox-div";
     deleteBox.addEventListener("click", () => {
-        sound.stop();
-        sound.unload();
+        obj[name].stop();
+        obj[name].unload();
+        // sound.stop();
+        // sound.unload();
         SBC.removeChild(soundBox); 
     });
     topRightButtonsBox.appendChild(deleteBox);
