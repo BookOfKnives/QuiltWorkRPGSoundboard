@@ -1,7 +1,3 @@
-
-const playAllEvent = new CustomEvent("playAll");
-
-// const CP = document.getElementById("soundboard-controlpanel-div");
 function controlPanel() {
     const CP_STOP = document.getElementById("sc-stopbutton-div");
     CP_STOP.addEventListener("click", () => {
@@ -9,19 +5,26 @@ function controlPanel() {
     })
     const CP_PLAYALL = document.getElementById("sc-playallbutton-div");
     CP_PLAYALL.addEventListener("click", () => {
-        console.log("you hit playall!");
-        console.log("bits:", selectedBits);
-        // console.log("class:", document.getElementsByClassName("selected"));
-        // document.dispatchEvent(playAllEvent);
-        // console.log(crypto.randomBytes(22).toString("hex"));
-        // console.log(obj)
-        
+        Howler._howls.forEach((e) => {
+            if(selectedBitsSet.has(e.name)) {
+                e.play();
+                // console.log("e is in!", e.name); //nu kan jeg afspille nogen!
+            } 
 
-        // dataObject.bits
+            else console.log("e is not in!", e.name);
+        })
     })
         const CP_TEST = document.getElementById("sc-testbutton-div");
     CP_TEST.addEventListener("click", () => {
         console.log("test complete !");
+        // console.log("howler111:", Howler);
+        // Howler._howls[0].play() //this works, this causes the first howl to play!
+        Howler._howls.forEach((e) => {
+            // console.log("this is E:", e) //this gives the individual _howls
+            // console.log("e name:", e.name) // this gives the e name
+            // e.play() //this causess ALL howls to play
+
+        })
     })
 }
 controlPanel();
@@ -55,21 +58,46 @@ function dragDropController() {
 dragDropController();
 
 const obj = {};
-const selectedBits = {};
+const selectedBits = {
+    
+};
+const selectedBitsSet = new Set();
+const overviewObject = {};
+//what if put the howl declaration here 
+// const myHowl = new Howl([]);
+
 function newSoundFactory(fileName, filePath, position) {  
+    // let name = makeLongRandomNumber();
+    // obj[name] = new Howl({  //changed from const sound = new howl
     let name = makeLongRandomNumber();
+    const obj = new Object();
     obj[name] = new Howl({  //changed from const sound = new howl
+    // myHowl({
         src: [filePath], 
         preload: true,
-        // onload: () => {
-        //     obj[name].play(); //sound.play()
-        // }
-        });
-    
+        onload: () => {
+            // obj.first = obj[name].play; //sound.play()
+            // overviewObject[name] = Howl( })
+            // console.log("new howl alive1111:", obj[name]);
+            // console.log("new howl alive2_:", obj);
+            // console.log("obj.first");
+
+            // console.log(obj.first)
+         },
+    });
+    obj[name].name = name;
+    // console.log("name?", obj[name].name);
+    // console.log("name?", obj[name]);
+    // overviewObject[obj.name] = Object(obj);
+
+    // overviewObject[obj] = Object(obj); //i dont think overviewObject is necessary any longer
+    // console.log("the thing", overviewObject);
+
     // let soundId = sound.play();
     // let soundId = obj[name].play();
-    // dataObject.arrPlayFunctions.push(sound);
-    obj[name].stop(); //sound.play()
+    // obj[name].stop(); //sound.play()
+
+// like a punk brae & joey valencio good song 2709 2024
     const soundBox = document.createElement("div");
     soundBox.className = "sound-box-div";
     soundBox.textContent = fileName;
@@ -181,20 +209,17 @@ function newSoundFactory(fileName, filePath, position) {
     groupBox.addEventListener("click", () => {
         if (!soundBox.classList.contains("selected")) {
             soundBox.classList.add("selected");
-            selectedBits.bits = { name, ...selectedBits };
+            selectedBitsSet.add(name);
+            // selectedBits.bits = name, ...selectedBits.bits;
+            console.log("now it is:", selectedBitsSet)
             return;
         } else if (soundBox.classList.contains("selected")) {
             soundBox.classList.remove("selected");
-            delete selectedBits.bits.name;
-            return
+            selectedBitsSet.delete(name);
+            console.log("now it is:", selectedBitsSet)
+            // delete selectedBits.bits[name];
+            return;
         }
-        // console.log("you clicked grouper!");
-        // console.log("this is id of box:", soundId);
-        // dataObject.arrayOfSelectedBits.push(soundId);
-        // console.log("array:", dataObject.arrayOfSelectedBits);
-        //add to grouper thing
-        //mark as grouped
-        //allow for selection
 
     })
     topRightButtonsBox.appendChild(groupBox);
