@@ -5,9 +5,11 @@ html, body, div {
     border: 0px;
 }
 
+
 #soundboard-container-div {
     height: 100vh;
     width: 100vw;  
+    color: #d5ebdc;
 }
 
 .soundboard-div > p {
@@ -26,6 +28,13 @@ html, body, div {
     border-radius: 5px;
     user-select: none;
   }
+  .sound-box-div:hover {
+    background-color: rgb(201, 125, 125);
+  }
+  .sound-box-div:hover {
+    background-color: rgb(201, 125, 125);
+  }
+
 
   .sound-controlpanel-div {
     display: flex;
@@ -48,11 +57,19 @@ html, body, div {
     border: 2px solid rgb(53, 53, 145);
     background-color: rgb(224, 224, 255);
   }
+
   .deleteBox-div {
     margin: 0;
     width: 10px;
     height: 10px;
-    border: 2px solid red;
+    border: 2px solid rgb(85, 42, 42);
+      position: relative;
+      background-color: transparent;
+      box-shadow: 
+          5px 5px 0 0 black,
+          5px -5px 0 0 black,
+          -5px 5px 0 0 black,
+          -5px -5px 0 0 black;
   }
   .deleteBox-div:hover {
     border: 2px solid #ff7474;
@@ -88,6 +105,7 @@ html, body, div {
     border: 2px solid #585;
     padding: 2px;
     width: 250px;
+    color: #d6eccd
   }
 
   #soundboard-controlpanel-div > #sc-stopbutton-div {
@@ -129,6 +147,21 @@ html, body, div {
     background-color: #bbffc1;
   }
 
-  .selected {
-    border: 1px dotted yellow;
+  #soundboard-controlpanel-div > #sc-savebutton-div {
+   border: 2px solid rgb(139, 167, 195);
+   width: 25px;
+   height: 25px; 
   }
+  
+  #soundboard-controlpanel-div > #sc-savebutton-div:hover {
+    background-color: #696d95;
+
+  }
+  #soundboard-controlpanel-div > #sc-savebutton-div:active {
+    background-color: #d1c5f1;
+  }
+
+  .selected {
+    background-color: rgb(32, 44, 110);
+  }
+

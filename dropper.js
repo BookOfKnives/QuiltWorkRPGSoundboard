@@ -2,29 +2,34 @@ function controlPanel() {
     const CP_STOP = document.getElementById("sc-stopbutton-div");
     CP_STOP.addEventListener("click", () => {
         Howler.stop();
+        Howler._howls.forEach((e) => {
+            //  console.log("this is e",e );
+            e.controlFunctions.stopColor(); //this wont work -- there's no way for the howl to know where it is.
+        })
     })
     const CP_PLAYALL = document.getElementById("sc-playallbutton-div");
     CP_PLAYALL.addEventListener("click", () => {
         Howler._howls.forEach((e) => {
             if(selectedBitsSet.has(e.name)) {
                 e.play();
+                
                 // console.log("e is in!", e.name); //nu kan jeg afspille nogen!
             } 
-
-            else console.log("e is not in!", e.name);
-        })
+            // else console.log("e is not in!", e.name);
+        });
     })
-        const CP_TEST = document.getElementById("sc-testbutton-div");
+    const CP_TEST = document.getElementById("sc-testbutton-div");
     CP_TEST.addEventListener("click", () => {
         console.log("test complete !");
+
         // console.log("howler111:", Howler);
         // Howler._howls[0].play() //this works, this causes the first howl to play!
-        Howler._howls.forEach((e) => {
+        // Howler._howls.forEach((e) => {
             // console.log("this is E:", e) //this gives the individual _howls
             // console.log("e name:", e.name) // this gives the e name
             // e.play() //this causess ALL howls to play
 
-        })
+        // })
     })
 }
 controlPanel();
@@ -65,6 +70,7 @@ const selectedBitsSet = new Set();
 const overviewObject = {};
 //what if put the howl declaration here 
 // const myHowl = new Howl([]);
+//i DID learn to make new variables for new functions. THis reduces mess. 
 
 function newSoundFactory(fileName, filePath, position) {  
     // let name = makeLongRandomNumber();
@@ -76,14 +82,7 @@ function newSoundFactory(fileName, filePath, position) {
         src: [filePath], 
         preload: true,
         onload: () => {
-            // obj.first = obj[name].play; //sound.play()
-            // overviewObject[name] = Howl( })
-            // console.log("new howl alive1111:", obj[name]);
-            // console.log("new howl alive2_:", obj);
-            // console.log("obj.first");
-
-            // console.log(obj.first)
-         },
+        },
     });
     obj[name].name = name;
     // console.log("name?", obj[name].name);
@@ -101,11 +100,12 @@ function newSoundFactory(fileName, filePath, position) {
     const soundBox = document.createElement("div");
     soundBox.className = "sound-box-div";
     soundBox.textContent = fileName;
+    //here i can go soundbox eventlistener to listen for clicks, so i can have it play on click. that would be sweet. but then it should also have a css on-hover color, in order to let it know.
     soundBox.style.left = `${position.left}px`;
     soundBox.style.top = `${position.top}px`;
 
     const soundControlPanel = document.createElement("div");
-    soundControlPanel.className = "sound-controlpanel-div"
+    soundControlPanel.className = "sound-controlpanel-div";
 
     soundBox.appendChild(soundControlPanel);
 
@@ -113,21 +113,39 @@ function newSoundFactory(fileName, filePath, position) {
     playButton.textContent = "Play";
     playButton.addEventListener("click", () => {
         // sound.play();
-        obj[name].play()
-    });
-    //maybe i can make a costum event listener
-    playButton.addEventListener("playAll", () => {
-        console.log("sound hitting playall event!");
-        // sound.play();
+        soundBox.style.backgroundColor = "#88ee88";
+//have a function that toggles the play state, so the CSS can see it.
+//forgive yourself -- and then, forgive everyone who ever slighted you. That's all past. Forgive them and forget it. 
+        obj[name].play();
 
-    }, false,)
+    });
 
     const stopButton = document.createElement("button")
     stopButton.textContent = "Stop"
     stopButton.addEventListener("click", () => {
         // sound.stop();
-        obj[name].stop()
-    })
+        soundBox.style.backgroundColor = "#009688";
+        obj[name].stop();
+    });
+    
+    // obj[name].controlFunctions = function backgroundColorStopper() {
+    // obj[name].controlFunctions.colorStopper = function backgroundColorStopper() {
+    // obj[name][`controlFunctions`][`colorStopper`] = "aaa";
+    obj[name].htmlDomRef = soundBox;
+    obj[name].controlFunctions = {};
+    obj[name].controlFunctions.stopColor = () => { 
+        // console.log("hello from controlfunc stopcolor")
+        soundBox.style.backgroundColor = "#009688";
+    };
+    
+    // obj[name].controlFunctions = {};
+
+    //den kan jo ikke gøre noget, der ikke findes for den. html-modellen.... hmm...
+    // {
+        // soundBox.style.backgroundColor = "#009688"
+        // console.log("hitting backgroundstopper nside obje name conftolfuntion")
+    // }
+    
     const repeatButton = document.createElement("button");
 
     repeatButton.innerHTML = `<img src="./icons/repeat_small.png"></img>`;
@@ -168,7 +186,7 @@ function newSoundFactory(fileName, filePath, position) {
     });
     
     function updateDuration() {
-        // const seek = sound.seek() || 0;
+        // const seek = s1ound.seek() || 0;
         // const total = sound.duration() || 0;
         const seek = obj[name].seek() || 0;
         const total = obj[name].duration() || 0;
@@ -211,32 +229,27 @@ function newSoundFactory(fileName, filePath, position) {
             soundBox.classList.add("selected");
             selectedBitsSet.add(name);
             // selectedBits.bits = name, ...selectedBits.bits;
-            console.log("now it is:", selectedBitsSet)
+            // console.log("now it is:", selectedBitsSet)
             return;
         } else if (soundBox.classList.contains("selected")) {
             soundBox.classList.remove("selected");
             selectedBitsSet.delete(name);
-            console.log("now it is:", selectedBitsSet)
-            // delete selectedBits.bits[name];
+            // console.log("now it is:", selectedBitsSet)
             return;
         }
 
     })
     topRightButtonsBox.appendChild(groupBox);
-   
 
     const deleteBox = document.createElement("div");
     deleteBox.className = "deleteBox-div";
     deleteBox.addEventListener("click", () => {
         obj[name].stop();
         obj[name].unload();
-        // sound.stop();
-        // sound.unload();
         SBC.removeChild(soundBox); 
     });
     topRightButtonsBox.appendChild(deleteBox);
     
-
     //appending buttons (the order here determines appearance order in the view)
     soundControlPanel.appendChild(volumeSlider);
     soundControlPanel.appendChild(playButton);
